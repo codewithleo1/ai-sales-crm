@@ -27,11 +27,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — allows the React frontend to call this API
+# CORS — allow all origins for portfolio demo
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:5173"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -47,9 +47,5 @@ app.include_router(insights.router)
 
 @app.get("/api/health")
 async def health_check() -> dict:
-    """
-    Health check endpoint.
-    Used by Render to verify the server is alive.
-    Frontend pings this on load to wake Render from sleep.
-    """
+    """Health check endpoint."""
     return {"status": "ok", "environment": settings.environment}
