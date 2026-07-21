@@ -4,10 +4,10 @@ import Layout from './components/layout/Layout'
 import Dashboard from './pages/Dashboard'
 import Pipeline from './pages/Pipeline'
 import AtRisk from './pages/AtRisk'
+import Contacts from './pages/Contacts'
 
 export default function App() {
   useEffect(() => {
-    // Wake up Render backend on app load
     fetch(`${import.meta.env.VITE_API_URL}/api/health`).catch(() => {})
   }, [])
 
@@ -18,6 +18,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="pipeline" element={<Pipeline />} />
           <Route path="at-risk" element={<AtRisk />} />
+          <Route path="contacts" element={<Contacts />} />
         </Route>
       </Routes>
     </BrowserRouter>

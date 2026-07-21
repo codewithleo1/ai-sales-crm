@@ -48,20 +48,20 @@ export default function AtRisk() {
             {atRiskDeals.map((deal) => (
               <div
                 key={deal.id}
-                className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex items-start justify-between gap-4"
+                className="bg-white border border-gray-100 rounded-xl p-5 flex items-start justify-between gap-4 shadow-sm"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-white font-medium text-sm">{deal.title}</h3>
+                    <h3 className="text-gray-900 font-medium text-sm">{deal.title}</h3>
                     <span className="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded-full">
                       {Math.round(deal.churn_score * 100)}% risk
                     </span>
                   </div>
-                  <p className="text-slate-400 text-xs">
+                  <p className="text-gray-400 text-xs">
                     Stage: {deal.stage} · Value: ${Number(deal.value || 0).toLocaleString()} · {deal.days_in_stage || 0} days in stage
                   </p>
                   {deal.notes && (
-                    <p className="text-slate-500 text-xs mt-2 leading-relaxed">
+                    <p className="text-gray-500 text-xs mt-2 leading-relaxed">
                       {deal.notes}
                     </p>
                   )}
