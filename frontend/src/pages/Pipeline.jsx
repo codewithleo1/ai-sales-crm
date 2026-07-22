@@ -57,9 +57,9 @@ export default function Pipeline() {
     dealsByStage(stage).reduce((s, d) => s + Number(d.value || 0), 0)
 
   return (
-    <div className="flex flex-col flex-1 h-screen">
-      {/* Topbar */}
-      <div className="h-16 bg-white border-b border-gray-100 flex items-center gap-4 px-6 shrink-0">
+    <div className="flex flex-col h-screen overflow-hidden">
+      {/* Topbar — sticky, never scrolls */}
+      <div className="h-16 bg-white border-b border-gray-100 flex items-center gap-4 px-6 shrink-0 z-10">
         <h1 className="text-gray-900 font-semibold text-base shrink-0">Pipeline</h1>
         <div className="relative">
           <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -67,10 +67,10 @@ export default function Pipeline() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search deals..."
-            className="border border-gray-200 rounded-lg pl-8 pr-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-56"
+            className="border border-gray-200 rounded-lg pl-8 pr-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
           />
         </div>
-        <div className="flex items-center gap-3 ml-auto">
+        <div className="flex items-center gap-40 ml-20">
           <button
             onClick={() => setShowAddDeal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors"
@@ -88,9 +88,9 @@ export default function Pipeline() {
         </div>
       </div>
 
-      {/* Kanban Board */}
-      <div className="flex-1 overflow-x-auto p-6">
-        <div className="flex gap-4 h-full min-w-max">
+      {/* Kanban Board — horizontal scroll only, vertical scrolls as one page */}
+      <div className="flex-1 overflow-x-auto overflow-y-auto p-6">
+        <div className="flex gap-4 min-w-max items-start">
           {STAGES.map(({ key, label, color }) => (
             <div
               key={key}
@@ -116,7 +116,7 @@ export default function Pipeline() {
               <div className="h-0.5 rounded-full mb-3" style={{ background: color }} />
 
               {/* Deal Cards */}
-              <div className="flex flex-col gap-2 flex-1 overflow-y-auto pb-4">
+              <div className="flex flex-col gap-2 pb-4">
                 {loading ? (
                   <div className="bg-white rounded-lg p-3 border border-gray-100 animate-pulse h-20" />
                 ) : dealsByStage(key).length === 0 ? (
