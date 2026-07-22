@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     # Groq
     groq_api_key: str
 
+    # Resend
+    resend_api_key: str = ""
+
     # App
     frontend_url: str = "http://localhost:5173"
     environment: str = "development"
