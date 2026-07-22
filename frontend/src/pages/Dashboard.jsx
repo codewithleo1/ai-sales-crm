@@ -69,11 +69,6 @@ export default function Dashboard() {
           <KPICard title="Avg Deal Value" value={`$${(avgDealValue / 1000).toFixed(0)}k`} subtitle="Across all stages" color="yellow" />
         </div>
         
-        {/* Debug */}
-        <p className="text-xs text-gray-400">Deals loaded: {deals.length}</p>
-
-        {/* Charts row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
 
         {/* Charts row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
