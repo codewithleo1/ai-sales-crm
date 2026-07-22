@@ -12,13 +12,13 @@
 
 | Dashboard | Pipeline |
 |-----------|----------|
-| ![Dashboard](frontend/Screenshots/01_Dashboard.png) | ![Pipeline](frontend/Screenshots/02_Sales%20Deal%20Pipelines.png) |
+| ![Dashboard](Screenshots/01_Dashboard.png) | ![Pipeline](Screenshots/02_Sales%20Deal%20Pipelines.png) |
 
 | At Risk | AI Insights |
 |---------|-------------|
-| ![At Risk](frontend/Screenshots/03_Risk%20Prediction.png) | ![AI Insights](frontend/Screenshots/04_AI%20Insights%20on%20Deals.png) |
+| ![At Risk](Screenshots/03_Risk%20Prediction.png) | ![AI Insights](Screenshots/04_AI%20Insights%20on%20Deals.png) |
 
-![Email Generation](frontend/Screenshots/05_Email%20Generation%20%26%20Send%20%26%20Received.png)
+![Email Generation](Screenshots/05_Email%20Generation%20%26%20Send%20%26%20Received.png)
 
 ---
 
