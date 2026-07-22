@@ -8,6 +8,22 @@
 
 ---
 
+## 📸 Screenshots
+
+| Dashboard | Pipeline |
+|-----------|----------|
+| ![Dashboard](frontend/Screenshots/01_Dashboard.png) | ![Pipeline](frontend/Screenshots/02_Sales%20Deal%20Pipelines.png) |
+
+| At Risk | AI Insights |
+|---------|-------------|
+| ![At Risk](frontend/Screenshots/03_Risk%20Prediction.png) | ![AI Insights](frontend/Screenshots/04_AI%20Insights%20on%20Deals.png) |
+
+![Email Generation](frontend/Screenshots/05_Email%20Generation%20%26%20Send%20%26%20Received.png)
+
+---
+
+---
+
 ## ✨ Features
 
 - **📊 Pipeline Dashboard** — $7.3M pipeline visualized with KPI cards, stage bar charts, and win rate donut chart
