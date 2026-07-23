@@ -26,7 +26,7 @@ async def get_insights(
         select(AIInsight)
         .where(AIInsight.dismissed == False)  # noqa: E712
         .order_by(AIInsight.generated_at.desc())
-        .limit(10)
+        .limit(3)
     )
     insights = result.scalars().all()
     return APIResponse(
