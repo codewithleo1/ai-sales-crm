@@ -14,7 +14,7 @@ _client = AsyncGroq(api_key=settings.groq_api_key)
 async def chat_completion(
     system_prompt: str,
     user_message: str,
-    max_tokens: int = 200,
+    max_tokens: int = 300,
     temperature: float = 0.3,
 ) -> str:
     """
