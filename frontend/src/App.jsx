@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import Pipeline from './pages/Pipeline'
 import AtRisk from './pages/AtRisk'
 import Contacts from './pages/Contacts'
+import Settings from './pages/Settings'
 
 export default function App() {
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="pipeline" element={<Pipeline />} />
           <Route path="at-risk" element={<AtRisk />} />
           <Route path="contacts" element={<Contacts />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>
