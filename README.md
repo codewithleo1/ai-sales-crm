@@ -3,9 +3,9 @@
 > An AI-powered CRM that analyzes your sales pipeline, predicts churn, drafts personalized follow-up emails, and delivers them — powered by Groq LLaMA 3.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20App-6366f1?style=for-the-badge&logo=vercel)](https://ai-sales-crm-nu.vercel.app)
+
 [![API Docs](https://img.shields.io/badge/API%20Docs-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://ai-sales-crm-ehv0.onrender.com/docs)
 
-> ⚠️ First load may take 30–50 seconds (Render free tier cold start)
 
 ---
 
