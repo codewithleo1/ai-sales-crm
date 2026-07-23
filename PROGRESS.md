@@ -272,7 +272,13 @@ VITE_API_URL=https://ai-sales-crm-ehv0.onrender.com
 | 17 | Tailwind inline `style={{ background }}` not applying | Use Tailwind class strings (`bg-indigo-50`) instead of inline style for backgrounds | Phase 3 |
 | 18 | Git push rejected — remote has work not in local | Use `git push --force` for fresh portfolio repos | GitHub |
 | 19 | `git commit` forgotten before `git push` | Always commit before push — `push` alone does nothing if no commit | GitHub |
-
+| 20 | `resend` package missing from `requirements.txt` — crashes FastAPI on startup | Always run `uv pip compile pyproject.toml -o requirements.txt` after `uv add <package>` | Deployment |
+| 21 | `import resend` at module level — missing package kills entire app, not just that route | Add packages to requirements before pushing any new import | Deployment |
+| 22 | Kanban topbar scrolls away with columns — `overflow-x-auto` on same container as header | Give topbar its own `shrink-0` div, put only kanban in the scrollable container | Phase 3 |
+| 23 | Per-column `overflow-y-auto` creates ugly individual scrollbars on each kanban column | Remove per-column overflow, let entire board scroll as one unit | Phase 3 |
+| 24 | `ml-auto` on buttons pushes Add Deal + Refresh off-screen on normal viewport | Remove `ml-auto`, place buttons directly after search with `ml-6` gap | Phase 3 |
+| 25 | Screenshots not rendering in README — folder not committed to git | `git add frontend/Screenshots/` explicitly before push | Deployment |
+| 26 | GitHub README image paths are case-sensitive — `Screenshots` vs `screenshots` breaks on Linux | Match exact folder casing, URL-encode spaces as `%20` and `&` as `%26` | Deployment |
 ---
 
 ## 📝 Key Decisions Made
@@ -334,12 +340,17 @@ VITE_API_URL=https://ai-sales-crm-ehv0.onrender.com
 
 ## ⏭️ Remaining Tasks
 
-- [ ] Remove debug line `Deals loaded: {deals.length}` from Dashboard.jsx
-- [ ] Add Resend API for real email sending from EmailDraftModal
-- [ ] Add Settings page (currently shows 404 warning in console)
-- [ ] Write README.md with screenshots + live demo link
-- [ ] Final commit and push everything to GitHub
-- [ ] Update PROGRESS.md after each remaining step
+- [x] Remove debug line `Deals loaded: {deals.length}` from Dashboard.jsx
+- [x] Fixed pipeline topbar — locked in place, only kanban scrolls
+- [x] Fixed per-column scrollbars — whole board scrolls as one
+- [x] Moved Add Deal + Refresh buttons next to search bar
+- [x] Added resend package to requirements.txt — fixed Render deploy crash
+- [x] Added screenshots to README.md
+- [x] Added Gotchas section to PROGRESS.md
+- [x] Commit and push Screenshots folder to GitHub
+- [x] Add Settings page (currently 404)
+- [x] Test real email sending end-to-end (Resend is wired up — verify send works)
+- [x] Final PROGRESS.md update + push everything
 
 ---
 
@@ -352,4 +363,4 @@ VITE_API_URL=https://ai-sales-crm-ehv0.onrender.com
 
 ---
 
-*Last updated: July 22, 2026*
+*Last updated: July 23, 2026 — PROJECT COMPLETE ✅*
