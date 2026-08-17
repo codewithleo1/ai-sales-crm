@@ -1,0 +1,132 @@
+{
+  "project_name": "AI Sales CRM SaaS",
+  "app_type": "saas_app",
+  "archetype": "THE PERFORMANCE PRO & SWISS HIGH-CONTRAST (Dark-Mode Modern B2B SaaS)",
+  "color_palette": {
+    "mode": "dark_primary_with_light_option",
+    "background_primary": "#0B0F17",
+    "background_surface": "#111827",
+    "background_card": "#1F2937",
+    "background_card_hover": "#374151",
+    "border_subtle": "#1F2937",
+    "border_active": "#374151",
+    "text_primary": "#F9FAFB",
+    "text_secondary": "#9CA3AF",
+    "text_muted": "#6B7280",
+    "accent_primary": "#6366F1",
+    "accent_primary_hover": "#4F46E5",
+    "accent_primary_light": "rgba(99, 102, 241, 0.15)",
+    "status_success": "#10B981",
+    "status_warning": "#F59E0B",
+    "status_danger": "#EF4444",
+    "status_info": "#3B82F6",
+    "gradient_primary": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+    "gradient_glow": "radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 75%)"
+  },
+  "typography": {
+    "heading_font": "Outfit, sans-serif",
+    "body_font": "Plus Jakarta Sans, sans-serif",
+    "mono_font": "JetBrains Mono, monospace",
+    "hierarchy": {
+      "h1": "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-100",
+      "h2": "text-2xl sm:text-3xl font-semibold tracking-tight text-slate-100",
+      "h3": "text-lg sm:text-xl font-medium text-slate-200",
+      "h4": "text-base font-medium text-slate-300",
+      "body": "text-sm text-slate-300 leading-relaxed",
+      "caption": "text-xs font-medium text-slate-400 uppercase tracking-wider"
+    }
+  },
+  "key_features_and_components": {
+    "multi_tenancy": {
+      "description": "Organization and Workspace Switcher dropdown in the top header with active workspace indicator, workspace creation modal, and tenant context propagation.",
+      "data_testid": "workspace-switcher-dropdown"
+    },
+    "sales_pipeline_kanban": {
+      "description": "Drag-and-drop Kanban board with stages (Lead, Contacted, Proposal, Negotiation, Closed Won, Closed Lost). Each card displays deal value, lead score badge, assigned owner avatar, risk status, and quick action context menu.",
+      "data_testid": "pipeline-kanban-board"
+    },
+    "dashboard_analytics": {
+      "description": "High-density executive dashboard featuring 4 top KPI cards (ARR, Pipeline Value, Win Rate, Avg Deal Cycle), Recharts pipeline stage bar chart, win-rate donut breakdown chart, and AI churn risk list.",
+      "data_testid": "dashboard-analytics-grid"
+    },
+    "at_risk_deals_panel": {
+      "description": "Dedicated AI Churn & Risk analysis table with engagement decay meters, sentiment signals, days inactive counter, and AI recommended recovery playbooks.",
+      "data_testid": "at-risk-deals-table"
+    },
+    "ai_insights_feed": {
+      "description": "Real-time AI signal stream highlighting high-intent buyers, stalled conversations, follow-up reminders, and automated deal scoring insights with quick-action buttons.",
+      "data_testid": "ai-insights-feed"
+    },
+    "ai_email_drafter": {
+      "description": "Modal/Slide-over AI email writer supporting 3 tones (Professional, Persuasive, Casual), custom prompt overrides, dynamic merge tags ({contact_name}, {deal_value}), and one-click copy/send.",
+      "data_testid": "ai-email-draft-modal"
+    },
+    "team_management": {
+      "description": "Organization team members management page with role assignment (Admin, Sales Rep, Viewer), seat allocation meters, invite modal, and activity status.",
+      "data_testid": "team-members-table"
+    },
+    "subscription_billing": {
+      "description": "Subscription tier selection cards (Starter, Pro, Enterprise), monthly/annual toggle, live plan usage progress bars (Seats used, AI credits, Deals tracked), and payment history invoices table.",
+      "data_testid": "subscription-billing-container"
+    },
+    "authentication_screens": {
+      "description": "Polished Login and Register screens with email/password auth, demo account fast-login credentials, multi-tenant workspace selection upon sign-in, and sleek split-screen visual layout.",
+      "data_testid": "auth-login-card"
+    }
+  },
+  "visual_enhancers": {
+    "card_style": "bg-slate-900/80 border border-slate-800 rounded-xl shadow-lg backdrop-blur-md transition-all duration-200 hover:border-slate-700",
+    "glassmorphism": "backdrop-blur-xl bg-slate-900/70 border border-slate-800/80 shadow-2xl",
+    "status_badges": "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border",
+    "table_density": "compact and readable with subtle hover rows (`hover:bg-slate-800/50`) and explicit column alignment"
+  },
+  "layout_and_spacing": {
+    "sidebar_navigation": "Fixed collapsible dark left sidebar (64px collapsed, 240px expanded) with active route highlight and tenant branding",
+    "header_bar": "Sticky top bar with global AI quick search, notification feed, multi-tenant workspace switcher, and user profile menu",
+    "content_area": "Generous responsive layout with max-w-7xl, px-4 sm:px-6 lg:px-8 py-6 gap-6 grid",
+    "bento_grid_mode": "MODE B: High Density Dashboard Grid using grid-cols-1 md:grid-cols-3 lg:grid-cols-4 with gap-6"
+  },
+  "image_urls": {
+    "avatars": [
+      {
+        "url": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMGF2YXRhciUyMHBvcnRyYWl0JTIwaGVhZHNob3R8ZW58MHx8fHwxNzg2OTcxODg1fDA&ixlib=rb-4.1.0&q=85",
+        "category": "Team Member / Account Exec",
+        "description": "Male corporate executive portrait"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMGF2YXRhciUyMHBvcnRyYWl0JTIwaGVhZHNob3R8ZW58MHx8fHwxNzg2OTcxODg1fDA&ixlib=rb-4.1.0&q=85",
+        "category": "Team Member / Sales Lead",
+        "description": "Female executive portrait"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMGF2YXRhciUyMHBvcnRyYWl0JTIwaGVhZHNob3R8ZW58MHx8fHwxNzg2OTcxODg1fDA&ixlib=rb-4.1.0&q=85",
+        "category": "Contact / Prospect Avatar",
+        "description": "Male tech founder portrait"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1699899657680-421c2c2d5064?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHw0fHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMGF2YXRhciUyMHBvcnRyYWl0JTIwaGVhZHNob3R8ZW58MHx8fHwxNzg2OTcxODg1fDA&ixlib=rb-4.1.0&q=85",
+        "category": "Contact / Prospect Avatar",
+        "description": "Female decision maker portrait"
+      }
+    ],
+    "dashboards": [
+      {
+        "url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB0ZWNoJTIwd29ya3NwYWNlJTIwc2FsZXMlMjBDUk0lMjBkYXNoYm9hcmQlMjB1c2VyJTIwYXZhdGFyJTIwYW5hbHl0aWNzfGVufDB8fHx8MTc4Njk3MTg3Nnww&ixlib=rb-4.1.0&q=85",
+        "category": "Login / Landing Hero Visualization",
+        "description": "Dark mode analytics workspace preview"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Execute full SaaS polish including multi-tenancy workspace selector, authentication flow, team management, subscription billing, AI email drafting modal, AI churn/at-risk scoring, and drag-and-drop Kanban pipeline.",
+    "Ensure all interactive elements have data-testid attributes (e.g., data-testid='nav-pipeline-link', data-testid='add-deal-button', data-testid='ai-draft-email-button').",
+    "Use Lucide-react icons for UI controls and Lucide/Phosphor style consistent iconography throughout.",
+    "Do not use transparent backgrounds without blur or semi-solid color on headers or overlays.",
+    "Ensure contrast ratios strictly meet WCAG AA dark mode guidelines (slate-100/900 contrast)."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": {
+    "testing_attributes": "All interactive buttons, links, inputs, tables, dropdowns, and KPI metrics MUST include descriptive kebab-case data-testid attributes.",
+    "anti_slop_rule": "Avoid plain light grey backgrounds. Use obsidian slate tones (#0B0F17, #111827, #1F2937) with subtle 1px slate-800 borders and vibrant accent indicators (#6366F1, #10B981, #EF4444).",
+    "toasts": "Use `sonner` for all notification feedback (deal moved, AI email generated, workspace switched, team invite sent)."
+  }
+}

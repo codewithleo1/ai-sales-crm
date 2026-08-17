@@ -1,0 +1,35 @@
+{
+  "summary": "Comprehensive backend + frontend testing of the AI Sales CRM Phase 1 rebuild. Wrote 22 pytest tests covering auth, multi-tenant isolation, deals CRUD + stage drag, contacts, at-risk + AI churn explain, AI email draft, AI insights generate/list, team RBAC, and billing. All 22 backend tests pass. Playwright covered login, dashboard KPIs/charts/insights, kanban with 70 deals across 6 columns, at-risk page with Groq explain, contacts, team invite/roles, billing plans. All flows work and Groq (qwen/qwen3.6-27b) returns non-empty AI responses.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/ai/email/send", "issue": "Accepts arbitrary deal_id without validating it belongs to the caller's org — send() does not verify deal_id ownership (low impact today since no DB write, but tightens security)"},
+      {"endpoint": "POST /api/team/invite", "issue": "Returned temp_password is only shown once in the API response; no email delivery yet — acceptable for Phase 1 but note there's no way to re-issue it"},
+      {"endpoint": "GET /api/auth/me", "issue": "Two 401 errors are logged in the browser console on initial page load before login (AuthContext calls /auth/me on mount). Expected but noisy — consider silencing on 401."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Dashboard bar chart", "issues": ["Only 4 stages render bars (Lead/Contacted/Proposal/Negotiation) — closed_won/closed_lost intentionally hidden from open pipeline chart; visually fine but a legend/tooltip would help."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "auth.py: login lockout uses ip+email identifier and increments even on valid attempts before the delete — the delete after success clears it correctly, so behavior is right; however, `locked_until` is overwritten on every failed attempt to now+15m even at count=1, which is fine but slightly aggressive. Acceptable.",
+    "auth.py: bcrypt hash starts with $2b$ (verified), httpOnly + samesite=none + secure cookies set correctly. CORS uses explicit FRONTEND_URL origin with allow_credentials=True. Playbook-compliant.",
+    "dashboard.py: /ai/email/send silently returns sent=false on any exception without incrementing ai_credits — OK for stub.",
+    "deals.py: `days_in_stage` is stored but never incremented over time (only reset on stage change). Churn scoring based on it will not evolve — consider a scheduled task or compute-on-read using created_at/updated_at.",
+    "routers/team.py: no check preventing an admin from downgrading another admin without owner consent — minor RBAC gap.",
+    "billing.py upgrade is intentionally a stub (Phase 2 Stripe) — acceptable per requirements."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (22/22)", "frontend": "100% of critical flows"},
+  "test_credentials": "demo@aisalescrm.com / Demo1234! (owner), jordan (admin), sam (member), riley (viewer)",
+  "seed_data_creation": "Seed runs on backend startup (Northwind Sales Co, 4 users, 40 contacts, 70 deals). Tests only add TEST_-prefixed data and clean up.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend fully green. UI Layout uses '/' for Dashboard route (not '/dashboard') — use [data-testid=nav-dashboard] to detect post-login. All data-testids present per spec. Groq calls take 2-6s, so wait accordingly. Registration endpoint lowercases emails."
+}
