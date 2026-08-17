@@ -39,6 +39,12 @@ UI/UX redesign, auth + roles + teams ("all of the above"). AI provider = Groq (Q
 - **Server-side search + pagination** for deals & contacts ({data,total,page,page_size,pages}); Contacts page has debounced search + Prev/Next.
 - Tested: 15/15 Phase-2 backend tests pass + all critical frontend flows (iteration_2.json). Sequence-write RBAC added after review.
 
+## Implemented (2026-08-17) — Phase 3 (partial) ✅
+- **AI Usage Limits (done):** Per-plan AI credit caps enforced (free 50 / pro 1000 / enterprise 50000) via usage.py on assistant chat, email draft, and insights — returns HTTP 402 with an upgrade prompt when exhausted; quota info (used/limit/remaining/low) returned to the client. Assistant UI surfaces the upgrade nudge.
+- **Assistant Actions (done):** The AI assistant can now perform actions from chat — create a deal, log an activity, and start a follow-up sequence — via ai.classify_action + in-chat execution (routers/assistant.py). Verified working.
+- **Sequence Automation (NOT done — next):** email_service.py (Resend async wrapper) was added, but the scheduler, per-step scheduled_at, automation toggle, run-now, and real sending are not yet wired into routers/sequences.py.
+- **Payment History / invoices (NOT done — next):** reportlab installed and billing.py planned edits (store orders, record payments with amounts, GET /payments, PDF invoice) are NOT yet implemented; Phase-2 billing still works unchanged.
+
 ## Later backlog
 - P1 (Phase 3): Smarter lead scoring, AI email sequences/cadences, AI chat assistant over pipeline.
 - P1: Server-side search & pagination on deals/contacts.

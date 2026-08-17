@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Bot, Send, Sparkles, User } from "lucide-react";
-import api from "../lib/api";
+import api, { apiError } from "../lib/api";
 import { Card } from "../components/ui";
 import { toast } from "sonner";
 
@@ -31,9 +31,15 @@ export default function Assistant() {
     try {
       const { data } = await api.post("/ai/assistant/chat", { message: msg, history });
       setMessages((m) => [...m, { role: "assistant", content: data.data.answer }]);
-    } catch {
-      toast.error("Assistant failed to respond");
-      setMessages((m) => [...m, { role: "assistant", content: "Sorry, I hit an error. Please try again." }]);
+    } catch (e) {
+      const detail = apiError(e.response?.data?.detail);
+      if (e.response?.status === 402) {
+        toast.error("AI credit limit reached");
+        setMessages((m) => [...m, { role: "assistant", content: `${detail}\n\nGo to Billing to upgrade your plan.` }]);
+      } else {
+        toast.error("Assistant failed to respond");
+        setMessages((m) => [...m, { role: "assistant", content: "Sorry, I hit an error. Please try again." }]);
+      }
     } finally { setLoading(false); }
   };
 

@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from auth import get_current_user
 from database import get_db
+from usage import enforce_ai_quota
 import ai
 
 router = APIRouter(prefix="/api", tags=["ai"])
@@ -57,6 +58,7 @@ class SendBody(BaseModel):
 @router.post("/ai/email/draft")
 async def draft(body: DraftBody, user: dict = Depends(get_current_user)):
     db = get_db()
+    await enforce_ai_quota(db, user["org_id"])
     deal = await db.deals.find_one({"id": body.deal_id, "org_id": user["org_id"]}, {"_id": 0})
     if not deal:
         raise HTTPException(status_code=404, detail="Deal not found")
@@ -100,6 +102,7 @@ async def get_insights(user: dict = Depends(get_current_user)):
 @router.post("/ai/insights/generate")
 async def gen_insights(user: dict = Depends(get_current_user)):
     db = get_db()
+    await enforce_ai_quota(db, user["org_id"])
     deals = await db.deals.find({"org_id": user["org_id"]}, {"_id": 0}).to_list(2000)
     content = await ai.generate_insights(deals)
     doc = {"id": str(uuid.uuid4()), "org_id": user["org_id"], "type": "pipeline",

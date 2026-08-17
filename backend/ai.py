@@ -1,5 +1,7 @@
 """AI services powered by Groq (Qwen). Churn, lead scoring, email drafting, insights."""
+import json
 import os
+import re
 from datetime import date, datetime
 
 from groq import AsyncGroq
@@ -184,3 +186,31 @@ async def draft_sequence_step(deal: dict, contact: dict, step_no: int, tone: str
     result = await draft_email(deal, contact, tone)
     result["step_context"] = context_note
     return result
+
+
+
+async def classify_action(message: str) -> dict:
+    """Detect if the user is asking the assistant to perform an action.
+    Returns {"action": one of create_deal|start_sequence|log_activity|none, "params": {...}}.
+    """
+    system = (
+        "You classify a sales rep's message into a CRM action. Respond with ONLY compact JSON, no prose.\n"
+        'Schema: {"action":"create_deal|start_sequence|log_activity|none","params":{...}}\n'
+        '- create_deal params: {"title": str, "value": number optional, "stage": one of '
+        'lead|contacted|proposal|negotiation optional}\n'
+        '- start_sequence params: {"deal_query": str}  (text to match an existing deal title)\n'
+        '- log_activity params: {"deal_query": str, "note": str}\n'
+        '- If the message is a question or general chat, use {"action":"none","params":{}}.\n'
+        "Only choose an action when the user clearly requests to DO something."
+    )
+    try:
+        raw = await chat(system, f"Message: {message}", max_tokens=180, temperature=0.0)
+        m = re.search(r"\{.*\}", raw, re.DOTALL)
+        if not m:
+            return {"action": "none", "params": {}}
+        data = json.loads(m.group(0))
+        if data.get("action") not in ("create_deal", "start_sequence", "log_activity"):
+            return {"action": "none", "params": {}}
+        return {"action": data["action"], "params": data.get("params", {}) or {}}
+    except Exception:
+        return {"action": "none", "params": {}}
