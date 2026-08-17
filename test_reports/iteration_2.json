@@ -1,0 +1,48 @@
+{
+  "summary": "Phase 2 testing (AI Assistant, Email Sequences, Search+Pagination, Razorpay checkout, RBAC). Wrote /app/backend/tests/test_phase2.py with 15 pytest tests — all 15 PASS. Ran Playwright end-to-end for /assistant (4 suggestion chips + Groq reply on chip click), /sequences (create → step 1 auto-drafted → view step 1 body → draft + send step 2), /contacts (server-side pagination Page 2 of 4, debounced search), /billing (Choose Pro downgrades free first, then fires /razorpay/order and Razorpay iframe overlay renders). Phase 1 regression: 20/22 pass — the 2 failures are STALE tests, not bugs (endpoints intentionally tightened in Phase 2: /api/ai/email/send now validates deal ownership and /api/billing/upgrade now rejects paid plans and requires checkout — those are the exact behaviors the new spec demands).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/billing/upgrade", "issue": "Correctly rejects paid plans with 400 'Paid plans require checkout' — this makes the old TestBilling.test_upgrade_stub test in backend_test.py stale. Recommend updating that test to expect 400 for 'pro' and 200 for 'free' (mirrors new test_phase2.py)."},
+      {"endpoint": "POST /api/ai/email/send", "issue": "Now returns 404 for unknown deal_id (good — tightens ownership check). Old backend_test.py::TestAI::test_email_send_stub sends deal_id='x' expecting 200; this test is now stale and should be updated to first create a deal."},
+      {"endpoint": "POST /api/sequences", "issue": "No explicit RBAC guard — a viewer can create sequences (which spend an AI credit). Should be restricted to owner/admin/member (align with team.invite)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Assistant", "issues": ["Suggestion chips disappear as soon as the first user message is sent (messages.length > 1). Consider keeping them visible below the conversation or offering a 'quick prompts' toggle so users can reuse them mid-conversation."]},
+      {"screen": "Billing", "issues": ["To upgrade Pro→Pro (or when already on Pro) the button is correctly disabled, but the UI gives no path to change billing cycle (monthly↔annual) once already on a paid plan; the Choose Pro button stays disabled. Consider enabling it when annual toggle differs from current cycle."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_phase2.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/phase2_results.xml",
+    "/app/test_reports/pytest/regression_results.xml"
+  ],
+  "action_items": [
+    "Update backend_test.py::TestAI::test_email_send_stub and TestBilling::test_upgrade_stub to reflect Phase 2 semantics (deal ownership required; paid plan requires checkout).",
+    "Consider adding RBAC check on POST /api/sequences (viewer should probably be read-only)."
+  ],
+  "critical_code_review_comments": [
+    "billing.py verify_payment: on invalid signature, catches broad Exception and re-raises 400 — good. It also does NOT update the plan on failure, verified by test. Signature check uses razorpay SDK utility.verify_payment_signature (real, HMAC-SHA256). Correct.",
+    "sequences.py: send_step allows sending a 'sent' step again (only rejects 'pending'). Idempotent-ish, but re-setting sent_at each time is odd. Minor.",
+    "assistant.py chat: loads up to 2000 deals into memory per call — fine for demo, but for very large orgs consider aggregating stats in Mongo instead.",
+    "deals.py list_deals: page_size cap is 2000 which is high; OK because /sequences UI uses this for the stalled-deals dropdown. Consider a smaller default.",
+    "Frontend Billing.js: when re-clicking a paid plan while already on it, the button is disabled — good. However there's no support for switching billing cycle (annual/monthly) after paying; only new signups honor `annual` flag.",
+    "Frontend Contacts.js: debounced search resets to page 1 correctly; pagination state persists across searches (good UX)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py (updated stale REACT_APP_BACKEND_URL default only)",
+    "/app/backend/tests/test_phase2.py (new)"
+  ],
+  "success_rate": {"backend": "100% (15/15 Phase 2) + 20/22 Phase 1 (2 stale tests, not bugs)", "frontend": "100% of Phase 2 critical flows"},
+  "test_credentials": "demo@aisalescrm.com / Demo1234! (owner); riley@aisalescrm.com / Demo1234! (viewer, used for 403 order test)",
+  "seed_data_creation": "Test-created sequences were cleaned up post-run. Demo org's plan was toggled to 'free' during upgrade_free test then restored to 'pro' via a direct Mongo update.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All Phase 2 features backend + frontend green. If Phase 1 stale test failures matter, main agent can trivially update backend_test.py::test_email_send_stub and test_upgrade_stub to match new tightened semantics. Razorpay tests use REAL test-mode API — orders are actually created in the Razorpay dashboard; verify signature check is real (HMAC). Groq responses take 2-8s so tests include 45s timeouts.",
+  "rca of the issue": "N/A — no bugs found. The two Phase 1 regression failures are expected behavioral changes announced in the review request itself (paid plans now require Razorpay checkout, /ai/email/send now validates deal ownership)."
+}
