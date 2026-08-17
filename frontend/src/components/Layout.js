@@ -1,7 +1,7 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, KanbanSquare, AlertTriangle, Users, UserCog,
-  CreditCard, Settings, LogOut, Sparkles, Search,
+  CreditCard, Settings, LogOut, Sparkles, Search, Bot, Mailbox,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Avatar } from "./ui";
@@ -9,6 +9,8 @@ import { Avatar } from "./ui";
 const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true, testid: "nav-dashboard" },
   { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, testid: "nav-pipeline" },
+  { to: "/assistant", label: "AI Assistant", icon: Bot, testid: "nav-assistant" },
+  { to: "/sequences", label: "Sequences", icon: Mailbox, testid: "nav-sequences" },
   { to: "/at-risk", label: "At-Risk", icon: AlertTriangle, testid: "nav-at-risk" },
   { to: "/contacts", label: "Contacts", icon: Users, testid: "nav-contacts" },
   { to: "/team", label: "Team", icon: UserCog, testid: "nav-team" },

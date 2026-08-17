@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import create_indexes
 from seed import seed_demo
 import auth
-from routers import deals, contacts, team, dashboard, billing
+from routers import deals, contacts, team, dashboard, billing, assistant, sequences
 
 
 @asynccontextmanager
@@ -38,6 +38,8 @@ app.include_router(contacts.router)
 app.include_router(team.router)
 app.include_router(dashboard.router)
 app.include_router(billing.router)
+app.include_router(assistant.router)
+app.include_router(sequences.router)
 
 
 @app.get("/api/health")

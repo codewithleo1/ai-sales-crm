@@ -142,3 +142,45 @@ async def generate_insights(deals: list[dict]) -> str:
         return ("Top Risks: Several deals show high churn scores — prioritize outreach.\n"
                 "Best Opportunities: Focus on high-probability negotiation-stage deals.\n"
                 "Do This Today: Send follow-ups to your three most inactive deals.")
+
+
+
+def build_pipeline_context(stats: dict, deals: list[dict]) -> str:
+    active = [d for d in deals if d.get("stage") not in ("closed_won", "closed_lost")]
+    active.sort(key=lambda d: float(d.get("value") or 0), reverse=True)
+    top = "\n".join(
+        f"- {d.get('title')} | {d.get('stage')} | ${float(d.get('value') or 0):,.0f} "
+        f"| {d.get('probability')}% win | churn {int((d.get('churn_score') or 0)*100)}% "
+        f"| lead {d.get('lead_score')}"
+        for d in active[:20])
+    return (
+        f"Pipeline snapshot:\n"
+        f"- Open pipeline value: ${float(stats.get('total_pipeline') or 0):,.0f}\n"
+        f"- Closed revenue: ${float(stats.get('arr') or 0):,.0f}\n"
+        f"- Win rate: {stats.get('win_rate')}%\n"
+        f"- Active deals: {stats.get('active_deals')} | At-risk: {stats.get('at_risk_count')}\n"
+        f"- Contacts: {stats.get('contacts_count')}\n\n"
+        f"Top active deals:\n{top if top else '(none)'}"
+    )
+
+
+async def assistant_answer(context: str, message: str, history: list[dict]) -> str:
+    convo = "\n".join(f"{h.get('role')}: {h.get('content')}" for h in (history or [])[-6:])
+    system = (
+        "You are an AI sales assistant embedded in a CRM. Answer questions about the user's pipeline "
+        "using ONLY the provided snapshot. Be concise and specific, reference deals by name, and give "
+        "actionable advice. If data is missing, say so briefly. No markdown symbols or bullet characters."
+    )
+    user = f"{context}\n\nConversation so far:\n{convo}\n\nUser question: {message}"
+    try:
+        return await chat(system, user, max_tokens=450, temperature=0.5)
+    except Exception:
+        return "I couldn't reach the AI service just now. Please try again in a moment."
+
+
+async def draft_sequence_step(deal: dict, contact: dict, step_no: int, tone: str, total_steps: int) -> dict:
+    context_note = {1: "first outreach", 2: "second follow-up (no reply yet)",
+                    3: "final check-in before pausing"}.get(step_no, f"follow-up #{step_no}")
+    result = await draft_email(deal, contact, tone)
+    result["step_context"] = context_note
+    return result

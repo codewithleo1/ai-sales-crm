@@ -76,7 +76,7 @@ export default function Pipeline() {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   const load = async () => {
-    const { data } = await api.get("/deals");
+    const { data } = await api.get("/deals", { params: { page_size: 2000 } });
     setDeals(data.data);
   };
   useEffect(() => { load().catch(() => toast.error("Failed to load pipeline")); }, []);

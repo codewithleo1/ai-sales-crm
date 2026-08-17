@@ -6,6 +6,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Pipeline from "./pages/Pipeline";
+import Assistant from "./pages/Assistant";
+import Sequences from "./pages/Sequences";
 import AtRisk from "./pages/AtRisk";
 import Contacts from "./pages/Contacts";
 import Team from "./pages/Team";
@@ -45,6 +47,8 @@ export default function App() {
           <Route path="/" element={<Protected><Layout /></Protected>}>
             <Route index element={<Dashboard />} />
             <Route path="pipeline" element={<Pipeline />} />
+            <Route path="assistant" element={<Assistant />} />
+            <Route path="sequences" element={<Sequences />} />
             <Route path="at-risk" element={<AtRisk />} />
             <Route path="contacts" element={<Contacts />} />
             <Route path="team" element={<Team />} />

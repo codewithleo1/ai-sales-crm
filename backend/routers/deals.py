@@ -41,10 +41,24 @@ def _score(deal: dict) -> dict:
 
 
 @router.get("")
-async def list_deals(user: dict = Depends(get_current_user)):
+async def list_deals(
+    user: dict = Depends(get_current_user),
+    q: str = "", stage: str = "", page: int = 1, page_size: int = 50,
+):
     db = get_db()
-    deals = await db.deals.find({"org_id": user["org_id"]}, {"_id": 0}).sort("created_at", -1).to_list(1000)
-    return {"data": deals}
+    query = {"org_id": user["org_id"]}
+    if q:
+        query["title"] = {"$regex": q, "$options": "i"}
+    if stage:
+        query["stage"] = stage
+    total = await db.deals.count_documents(query)
+    page = max(1, page)
+    page_size = min(max(1, page_size), 2000)
+    cursor = db.deals.find(query, {"_id": 0}).sort("created_at", -1) \
+        .skip((page - 1) * page_size).limit(page_size)
+    deals = await cursor.to_list(page_size)
+    return {"data": deals, "total": total, "page": page, "page_size": page_size,
+            "pages": max(1, (total + page_size - 1) // page_size)}
 
 
 @router.post("", status_code=201)

@@ -41,16 +41,64 @@ export default function Billing() {
   };
   useEffect(() => { load(); }, []);
 
-  const upgrade = async (plan) => {
-    try {
-      await api.post("/billing/upgrade", { plan });
-      toast.success(`Switched to ${plans[plan].name} plan`);
-      await load();
-      await refreshUser();
-    } catch (e) { toast.error(apiError(e.response?.data?.detail)); }
-  };
+  const upgrade = async (plan) => changePlan(plan);
 
   const current = usage?.plan;
+
+  const loadRazorpay = () =>
+    new Promise((resolve) => {
+      if (window.Razorpay) return resolve(true);
+      const s = document.createElement("script");
+      s.src = "https://checkout.razorpay.com/v1/checkout.js";
+      s.onload = () => resolve(true);
+      s.onerror = () => resolve(false);
+      document.body.appendChild(s);
+    });
+
+  const changePlan = async (key) => {
+    // Free = direct downgrade, no payment
+    if (plans[key]?.price === 0) {
+      try {
+        await api.post("/billing/upgrade", { plan: key });
+        toast.success("Switched to Free plan");
+        await load(); await refreshUser();
+      } catch (e) { toast.error(apiError(e.response?.data?.detail)); }
+      return;
+    }
+    // Paid = Razorpay checkout
+    const ok = await loadRazorpay();
+    if (!ok) return toast.error("Could not load Razorpay checkout");
+    let order;
+    try {
+      const { data } = await api.post("/billing/razorpay/order", { plan: key, annual });
+      order = data.data;
+    } catch (e) { return toast.error(apiError(e.response?.data?.detail)); }
+
+    const rzp = new window.Razorpay({
+      key: order.key_id,
+      amount: order.amount,
+      currency: order.currency,
+      order_id: order.order_id,
+      name: "Northwind CRM",
+      description: `${plans[key].name} plan`,
+      prefill: { name: user?.name, email: user?.email },
+      theme: { color: "#6366F1" },
+      handler: async (resp) => {
+        try {
+          await api.post("/billing/razorpay/verify", {
+            plan: key,
+            razorpay_order_id: resp.razorpay_order_id,
+            razorpay_payment_id: resp.razorpay_payment_id,
+            razorpay_signature: resp.razorpay_signature,
+          });
+          toast.success(`Upgraded to ${plans[key].name}! 🎉`);
+          await load(); await refreshUser();
+        } catch (e) { toast.error(apiError(e.response?.data?.detail)); }
+      },
+      modal: { ondismiss: () => toast.message("Checkout cancelled") },
+    });
+    rzp.open();
+  };
 
   return (
     <div className="fade-up" data-testid="subscription-billing-container">
@@ -117,7 +165,7 @@ export default function Billing() {
         })}
       </div>
       <p className="text-xs text-slate-600 mt-4">
-        Payments are simulated in this build. Live Stripe checkout is on the Phase-2 roadmap.
+        Secure checkout via Razorpay (test mode). Use test card 4111 1111 1111 1111, any future expiry & CVV.
       </p>
     </div>
   );

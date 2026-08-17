@@ -31,6 +31,15 @@ UI/UX redesign, auth + roles + teams ("all of the above"). AI provider = Groq (Q
 
 ## Backlog / Next
 - P0 (Phase 2): Real Stripe subscriptions & checkout + AI usage-limit enforcement.
+
+## Implemented (2026-08-17) — Phase 2 ✅
+- **Razorpay (TEST mode) checkout** for paid plan upgrades: create order + real HMAC signature verification (/api/billing/razorpay/order, /verify); Free plan is a direct downgrade. Frontend loads Razorpay checkout.js and opens the modal from Billing.
+- **AI Sales Assistant** chat over the live pipeline (Groq/Qwen) — /assistant page with suggestion chips (/api/ai/assistant/chat, /suggestions).
+- **AI Email Sequences** — 3-step follow-up cadences (day 0/3/7) that auto-draft with AI; draft/send per step; viewer role read-only (/api/sequences/*, /sequences page).
+- **Server-side search + pagination** for deals & contacts ({data,total,page,page_size,pages}); Contacts page has debounced search + Prev/Next.
+- Tested: 15/15 Phase-2 backend tests pass + all critical frontend flows (iteration_2.json). Sequence-write RBAC added after review.
+
+## Later backlog
 - P1 (Phase 3): Smarter lead scoring, AI email sequences/cadences, AI chat assistant over pipeline.
 - P1: Server-side search & pagination on deals/contacts.
 - P2: Activity timeline, tasks/reminders, notes, email open/click tracking, template library.

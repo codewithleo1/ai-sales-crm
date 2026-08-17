@@ -20,10 +20,26 @@ class ContactCreate(BaseModel):
 
 
 @router.get("")
-async def list_contacts(user: dict = Depends(get_current_user)):
+async def list_contacts(
+    user: dict = Depends(get_current_user),
+    q: str = "", page: int = 1, page_size: int = 24,
+):
     db = get_db()
-    contacts = await db.contacts.find({"org_id": user["org_id"]}, {"_id": 0}).sort("created_at", -1).to_list(1000)
-    return {"data": contacts}
+    query = {"org_id": user["org_id"]}
+    if q:
+        query["$or"] = [
+            {"name": {"$regex": q, "$options": "i"}},
+            {"email": {"$regex": q, "$options": "i"}},
+            {"company": {"$regex": q, "$options": "i"}},
+        ]
+    total = await db.contacts.count_documents(query)
+    page = max(1, page)
+    page_size = min(max(1, page_size), 2000)
+    cursor = db.contacts.find(query, {"_id": 0}).sort("created_at", -1) \
+        .skip((page - 1) * page_size).limit(page_size)
+    contacts = await cursor.to_list(page_size)
+    return {"data": contacts, "total": total, "page": page, "page_size": page_size,
+            "pages": max(1, (total + page_size - 1) // page_size)}
 
 
 @router.post("", status_code=201)

@@ -11,7 +11,7 @@ export default function AddDealModal({ onClose, onCreated }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.get("/contacts").then((r) => setContacts(r.data.data)).catch(() => {});
+    api.get("/contacts", { params: { page_size: 1000 } }).then((r) => setContacts(r.data.data)).catch(() => {});
   }, []);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
