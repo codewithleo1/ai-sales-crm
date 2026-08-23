@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AI Sales CRM", version="2.0.0", lifespan=lifespan)
 
-origins = [os.environ.get("FRONTEND_URL", "http://localhost:3000")]
+origins = ["https://ai-sales-crm-nu.vercel.app", "http://localhost:3000"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
