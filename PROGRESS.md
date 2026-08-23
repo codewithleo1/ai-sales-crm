@@ -116,25 +116,41 @@ AI analyzes deals, predicts churn, drafts follow-up emails, surfaces at-risk acc
 - [x] Live app fully working end to end ✅
 - [x] **Git commits: `chore: add Procfile, runtime.txt, requirements.txt for Render`**, `fix: open CORS for portfolio demo`**, `fix: add Render cold start health ping on app load`**
 
+### Phase 6 — Agentic AI System (Human-in-the-Loop)
+- [ ] Agent decision engine (`backend/agent.py`) — scans pipeline, applies decision boundary
+- [ ] Decision boundary rules:
+      - deal.stage in [lead, contacted] AND deal.value < 50000 → agent acts autonomously
+      - deal.stage == proposal OR deal.value >= 50000 → agent prepares, human approves
+      - deal.stage in [negotiation, closed_won, closed_lost] → agent observes only
+- [ ] Agent tools:
+      - `scan_pipeline` — reads all deals, scores churn risk
+      - `draft_and_send` — drafts + sends follow-up via Resend (autonomous only)
+      - `create_activity` — logs every action to deal timeline
+- [ ] Agent Inbox router (`backend/routers/agent.py`)
+      - GET /api/agent/inbox — pending approvals + recent actions
+      - POST /api/agent/run — trigger agent manually
+      - POST /api/agent/approve/{action_id} — human approves draft
+      - POST /api/agent/reject/{action_id} — human rejects draft
+- [ ] Agent log collection in MongoDB (`agent_actions`)
+- [ ] Frontend: Agent Inbox page (`frontend/src/pages/AgentInbox.js`)
+      - Autonomous actions taken today
+      - Pending human approvals with Review/Approve/Reject
+      - Handed-off deals (prospect replied)
+- [ ] Add Agent Inbox to sidebar navigation
+- [ ] **Git commit: `feat: agentic AI system with human-in-the-loop inbox`**
+
 ---
+
 
 ## 🔄 Current Status
 
-**Currently on:** Phase 5 complete. Working on UI improvements.
+**Currently on:** Phase 6 — Agentic AI System
 
 **Last completed action:**
-> Fixed pipeline kanban topbar layout (search + Add Deal + Refresh left-aligned).
-> Fixed PipelineChart to show colored bars per stage.
-> Added search to Pipeline kanban.
-> Added Add Deal modal to Dashboard and Pipeline pages.
-> Added Contacts page with search and Add Contact modal.
-> Removed debug "Deals loaded" line from Dashboard.
+> Full deployment working — MongoDB Atlas connected, Render running Python 3.12, Bearer token auth fixes cross-domain Vercel→Render issue. Live app fully working at https://ai-sales-crm-nu.vercel.app with login, dashboard, pipeline, AI insights, email drafting all functional.
 
 **Next action to take:**
-> Remove debug line from Dashboard.jsx if still present.
-> Commit all UI improvements and push to GitHub + Vercel auto-deploys.
-> Add Resend email sending (real email delivery from email modal).
-> Write README.md with screenshots and live demo link.
+> Build Phase 6 — Start with `backend/agent.py` — the core agent decision engine that scans pipeline and applies human-in-the-loop boundary rules
 
 ---
 
@@ -279,6 +295,12 @@ VITE_API_URL=https://ai-sales-crm-ehv0.onrender.com
 | 24 | `ml-auto` on buttons pushes Add Deal + Refresh off-screen on normal viewport | Remove `ml-auto`, place buttons directly after search with `ml-6` gap | Phase 3 |
 | 25 | Screenshots not rendering in README — folder not committed to git | `git add frontend/Screenshots/` explicitly before push | Deployment |
 | 26 | GitHub README image paths are case-sensitive — `Screenshots` vs `screenshots` breaks on Linux | Match exact folder casing, URL-encode spaces as `%20` and `&` as `%26` | Deployment |
+| 27 | Cross-domain cookies blocked by browser between Vercel and Render | Switch to Bearer token in Authorization header + localStorage | Deployment |
+| 28 | MongoDB Atlas blocks all external IPs by default | Add `0.0.0.0/0` to Network Access in Atlas | Deployment |
+| 29 | Render defaults to Python 3.14 — MongoDB SSL handshake fails | Set `PYTHON_VERSION=3.12.0` in Render environment variables | Deployment |
+| 30 | `emergentintegrations` and private `litellm` URL in requirements.txt — not on PyPI | Rebuild clean requirements.txt via `uv pip compile pyproject.toml` | Deployment |
+| 31 | `runtime.txt` doesn't pin Python on Render (Ruby/Node convention only) | Use `PYTHON_VERSION` env var in Render dashboard instead | Deployment |
+| 32 | `allow_origins=["*"]` with `withCredentials=True` blocked by browser | Use specific origin list in CORS middleware | Deployment |
 ---
 
 ## 📝 Key Decisions Made
@@ -297,6 +319,9 @@ VITE_API_URL=https://ai-sales-crm-ehv0.onrender.com
 | Colored KPI cards | Indigo/green/red/yellow — each metric has semantic color |
 | Kanban board for Pipeline | Industry-standard CRM pattern, drag-to-move is impressive in demos |
 | Seed script with Faker | Realistic demo data — 50 contacts, 120 deals, ~400 activities |
+| MongoDB Atlas over Supabase | Supabase hit 2-project limit; Atlas free tier has no project limit |
+| Bearer token over cookies | Cross-domain cookies blocked by browsers between Vercel and Render |
+| PYTHON_VERSION env var over runtime.txt | Render only respects env var for Python version pinning |
 
 ---
 
