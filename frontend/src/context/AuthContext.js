@@ -26,6 +26,7 @@ export function AuthProvider({ children }) {
   const register = async (payload) => {
     try {
       const { data } = await api.post("/auth/register", payload);
+      if (data.access_token) localStorage.setItem("access_token", data.access_token);
       setUser(data);
       return { ok: true };
     } catch (e) {
@@ -35,6 +36,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     await api.post("/auth/logout").catch(() => {});
+    localStorage.removeItem("access_token");
     setUser(false);
   };
 

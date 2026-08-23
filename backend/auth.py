@@ -39,11 +39,13 @@ def create_refresh_token(user_id: str) -> str:
 
 def _set_cookies(response: Response, access: str, refresh: str):
     is_prod = os.environ.get("ENVIRONMENT", "development") == "production"
-    response.set_cookie("access_token", access, httponly=True, 
-                        secure=is_prod, samesite="none" if is_prod else "lax",
+    response.set_cookie("access_token", access, httponly=True,
+                        secure=is_prod, 
+                        samesite="none" if is_prod else "lax",
                         max_age=43200, path="/")
     response.set_cookie("refresh_token", refresh, httponly=True,
-                        secure=is_prod, samesite="none" if is_prod else "lax",
+                        secure=is_prod,
+                        samesite="none" if is_prod else "lax",
                         max_age=604800, path="/")
 
 
@@ -137,8 +139,11 @@ async def login(body: LoginBody, request: Request, response: Response):
             {"$inc": {"count": 1}, "$set": {"locked_until": until}}, upsert=True)
         raise HTTPException(status_code=401, detail="Invalid email or password")
     await db.login_attempts.delete_one({"identifier": identifier})
-    _set_cookies(response, create_access_token(user["id"], email), create_refresh_token(user["id"]))
-    return await _public_user(db, user)
+    access_token = create_access_token(user["id"], email)
+    refresh_token = create_refresh_token(user["id"])
+    _set_cookies(response, access_token, refresh_token)
+    user_data = await _public_user(db, user)
+    return {**user_data, "access_token": access_token}
 
 
 @router.post("/logout")
