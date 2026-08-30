@@ -1,6 +1,5 @@
 """Backend regression tests for AI Sales CRM (Phase 1 rebuild)."""
 import os
-import time
 import uuid
 import pytest
 import requests

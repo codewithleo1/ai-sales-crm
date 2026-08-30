@@ -1,6 +1,5 @@
 """Backend tests for Phase 2 features: AI Assistant, Email Sequences, Search+Pagination, Razorpay."""
 import os
-import uuid
 import pytest
 import requests
 

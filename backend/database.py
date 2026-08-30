@@ -25,3 +25,5 @@ async def create_indexes():
     await db.insights.create_index([("org_id", 1)])
     await db.password_reset_tokens.create_index("expires_at", expireAfterSeconds=0)
     await db.login_attempts.create_index("identifier")
+    await db.agent_actions.create_index([("org_id", 1), ("status", 1)])
+    await db.agent_actions.create_index("id", unique=True)
