@@ -19,13 +19,16 @@ AI analyzes deals, predicts churn, drafts follow-up emails, surfaces at-risk acc
 ## 🛠️ Stack
 | Layer | Tool |
 |-------|------|
-| Frontend | React 18 + Vite + Tailwind CSS + Zustand |
-| Backend | FastAPI + SQLAlchemy async + Python 3.12 |
-| Database | Supabase (PostgreSQL) |
-| AI | Groq API — llama-3.1-8b-instant |
+| Frontend | React 18 + Vite + Tailwind CSS |
+| Backend | FastAPI + Motor async + Python 3.12 |
+| Database | MongoDB Atlas |
+| AI | Groq API — Qwen3 |
+| Auth | JWT Bearer tokens |
+| Email | Resend |
+| Payments | Razorpay (test mode) |
 | Charts | Recharts |
 | Deploy FE | Vercel |
-| Deploy BE | Render (free tier, Singapore region) |
+| Deploy BE | Render (free tier) |
 | Env | Windows + PowerShell + VS Code + uv |
 
 ---
@@ -116,41 +119,26 @@ AI analyzes deals, predicts churn, drafts follow-up emails, surfaces at-risk acc
 - [x] Live app fully working end to end ✅
 - [x] **Git commits: `chore: add Procfile, runtime.txt, requirements.txt for Render`**, `fix: open CORS for portfolio demo`**, `fix: add Render cold start health ping on app load`**
 
-### Phase 6 — Agentic AI System (Human-in-the-Loop)
-- [ ] Agent decision engine (`backend/agent.py`) — scans pipeline, applies decision boundary
-- [ ] Decision boundary rules:
-      - deal.stage in [lead, contacted] AND deal.value < 50000 → agent acts autonomously
-      - deal.stage == proposal OR deal.value >= 50000 → agent prepares, human approves
-      - deal.stage in [negotiation, closed_won, closed_lost] → agent observes only
-- [ ] Agent tools:
-      - `scan_pipeline` — reads all deals, scores churn risk
-      - `draft_and_send` — drafts + sends follow-up via Resend (autonomous only)
-      - `create_activity` — logs every action to deal timeline
-- [ ] Agent Inbox router (`backend/routers/agent.py`)
-      - GET /api/agent/inbox — pending approvals + recent actions
-      - POST /api/agent/run — trigger agent manually
-      - POST /api/agent/approve/{action_id} — human approves draft
-      - POST /api/agent/reject/{action_id} — human rejects draft
-- [ ] Agent log collection in MongoDB (`agent_actions`)
-- [ ] Frontend: Agent Inbox page (`frontend/src/pages/AgentInbox.js`)
-      - Autonomous actions taken today
-      - Pending human approvals with Review/Approve/Reject
-      - Handed-off deals (prospect replied)
-- [ ] Add Agent Inbox to sidebar navigation
-- [ ] **Git commit: `feat: agentic AI system with human-in-the-loop inbox`**
+### Phase 6 — Agentic AI System ✅
+- [x] `backend/agent.py` — decision engine with autonomous/approval/observe boundary
+- [x] `backend/routers/agent.py` — /api/agent/run, /api/agent/inbox, /api/agent/approve, /api/agent/reject
+- [x] Agent registered in server.py + agent_actions indexes in database.py
+- [x] `frontend/src/pages/AgentInbox.jsx` — pending approvals + recent activity + approve/reject UI
+- [x] Agent Inbox added to sidebar nav (Layout.js) and router (App.js)
+- [x] **Git commit: `feat: agentic AI system with human-in-the-loop inbox`**
 
 ---
 
 
 ## 🔄 Current Status
 
-**Currently on:** Phase 6 — Agentic AI System
+**Currently on:** All phases complete ✅
 
 **Last completed action:**
-> Full deployment working — MongoDB Atlas connected, Render running Python 3.12, Bearer token auth fixes cross-domain Vercel→Render issue. Live app fully working at https://ai-sales-crm-nu.vercel.app with login, dashboard, pipeline, AI insights, email drafting all functional.
+> Phase 6 complete — Agentic AI system live. Agent scans at-risk deals, acts autonomously on low-value leads, queues high-value deals for human approval. Agent Inbox page deployed and working.
 
 **Next action to take:**
-> Build Phase 6 — Start with `backend/agent.py` — the core agent decision engine that scans pipeline and applies human-in-the-loop boundary rules
+> Update README and PROGRESS.md, final push.
 
 ---
 
@@ -301,6 +289,9 @@ VITE_API_URL=https://ai-sales-crm-ehv0.onrender.com
 | 30 | `emergentintegrations` and private `litellm` URL in requirements.txt — not on PyPI | Rebuild clean requirements.txt via `uv pip compile pyproject.toml` | Deployment |
 | 31 | `runtime.txt` doesn't pin Python on Render (Ruby/Node convention only) | Use `PYTHON_VERSION` env var in Render dashboard instead | Deployment |
 | 32 | `allow_origins=["*"]` with `withCredentials=True` blocked by browser | Use specific origin list in CORS middleware | Deployment |
+| 33 | `login()` in AuthContext didn't save token to localStorage — all requests after login got 401 | Add `localStorage.setItem("access_token", data.access_token)` inside login() | Phase 6 |
+| 34 | Layout.js and AgentInbox.jsx edited locally but never git add-ed — Vercel kept building old version | Always verify with `git show HEAD:path/to/file \| Select-String "keyword"` before pushing | Phase 6 |
+| 35 | PowerShell has no `grep` — use `Select-String` instead | `git show HEAD:file.js \| Select-String "keyword"` | Phase 6 |
 ---
 
 ## 📝 Key Decisions Made
@@ -388,4 +379,4 @@ VITE_API_URL=https://ai-sales-crm-ehv0.onrender.com
 
 ---
 
-*Last updated: July 23, 2026 — PROJECT COMPLETE ✅*
+*Last updated: August 30, 2026 — ALL PHASES COMPLETE ✅*
