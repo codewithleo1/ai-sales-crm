@@ -13,6 +13,7 @@ import Contacts from "./pages/Contacts";
 import Team from "./pages/Team";
 import Billing from "./pages/Billing";
 import Settings from "./pages/Settings";
+import AgentInbox from "./pages/AgentInbox";
 
 function Loader() {
   return (
@@ -54,6 +55,7 @@ export default function App() {
             <Route path="team" element={<Team />} />
             <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="agent" element={<AgentInbox />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

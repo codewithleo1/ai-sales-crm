@@ -1,5 +1,4 @@
 """AI Sales CRM — FastAPI entrypoint (multi-tenant, JWT auth, Groq AI)."""
-import os
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
@@ -11,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import create_indexes
 from seed import seed_demo
 import auth
-from routers import deals, contacts, team, dashboard, billing, assistant, sequences
+from routers import deals, contacts, team, dashboard, billing, assistant, sequences, agent
 
 
 @asynccontextmanager
@@ -23,7 +22,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AI Sales CRM", version="2.0.0", lifespan=lifespan)
 
-origins = [os.environ.get("FRONTEND_URL", "http://localhost:3000")]
+origins = ["https://ai-sales-crm-nu.vercel.app", "http://localhost:3000"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -40,6 +39,7 @@ app.include_router(dashboard.router)
 app.include_router(billing.router)
 app.include_router(assistant.router)
 app.include_router(sequences.router)
+app.include_router(agent.router)
 
 
 @app.get("/api/health")
